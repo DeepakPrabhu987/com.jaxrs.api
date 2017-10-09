@@ -1,0 +1,12 @@
+{
+  "type": "service_account",
+  "project_id": "lively-math-180706",
+  "private_key_id": "b1dab76d5b80407fe8dfde196ded1a6b98faaa74",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC07JJHrV0jxf+C\ngEehD61AyglXIBOFVTPvnD8KAmhABuKt3SGSi3og17b8sE6E/YqoBF/4KWbMjsfS\naZPp/VILXWgyBuCFYXjud/ftsFcZqc6mrXcG+4GkbLIwMZQsKYjn1UNZoqVuIxYq\nwLvJJFFJuBBTY1L89/tcE3BLnLWDlGSr/p6DpgZJsWeaE+P2QFjY7gZfu4ZsRmyr\n23VIm9TBgT90ddNEd9QMbYWKMk9Zlt6g7UhsJsWq2UqMuXzbK2RRiUfJEjdWfd6+\nd8YUceiopqhm3yirPVl4LRamm0bwkkRclI/Ou0kah10KDdUOh+edKchwThaskXK8\nUvI3pkwPAgMBAAECggEABER6P3zm2q5TvwvF5MDTvi37IhYhxROD6e3JDN7j/51J\n9n47SajG5NnBuVxyla93TaGWHpU3arF0JCc/s8AOZzHjqx5qEwCqvhE6r11pSIku\nqdQjSm5fRKDDDouff5qBM1qz6nwsI8NpxUYOMonhQvhiUN03EBF3WS4k3XELqlf+\nVHo/ypgY9d79a1/yTFig+oDGW0cHfSCBlwGIFxpKXH5TyyqK8vJgqwabbjaMFkQj\nWAQCwPsiTODpc4hPIdg3pUl8J23KGRhHsfdl8koigFYliMlL7sf1aW7uWI3ai7Ol\nMvN1OgPZmAIg6qxp2qsnLI6kT7ZaorssLqjgkZXGQQKBgQDxR9cegHZcAb6uJUau\nLvk2HR77Ml/IQBxHZDKVcCb29EFNJEEWQuT+oFHRaGuOZMmPFR3OXYyEXRN6KOlg\nuxPfthYDEPoif7aIqdpUnZH/dwaHNBkGWSLfPaIJ4qZ/iaAVnN9UJP9Z9oOw0WIW\nq9px53xlqWEKGNh2VtEvg/xJwQKBgQC/9h+PxWDQSv4TWQeOxWKu16vnNE4eeXLP\nmqnhNA5//m5oJLTJyYRS986Q3CR+FQfHeZcZLbpA3C/NgEENxmK7iFs1xgq+4Xr/\ntBsuOYEGgs2qTdLLVjvl5Aowe9Q/kWuIi/wxkMUih54O2F8JJKghmhtQqtQKRaSv\nlTgjZQbpzwKBgQCvsWpZ0Z1ePf8FfCtNpvLdjrMCo5nPja+J5NJYswQMi6wJaj7i\n4O8y4rbxT6ISXB3RTMUZglFSCRyntabLQy6jlknNDc221Vyrg1NyjhLD/X4JccxP\nLRURjiWyIRKwiBzD4ClXcmFmtvUKCk3syFMW4kNZG8+HtLPa6DkG6osJgQKBgHN3\nW6LCairAgTYoHlituF9NUZTALKE+EmZ4NOlGw9YPuF+ifLDIK3UwpCsUkEra4ZQG\nOnIlxFwRVhu5oufjRi5hpeOhnYMV5EN9FcBnTIobEhT3vO0ckOkGk254fcJC+bjn\n4yn5V+seQl/RnNDGIPAdX4LVTrhjDd2j12HK+i6XAoGBAJy2MZqK01XIKZWLHuh/\nAqEtttbHw/NNhh/x5tgtz6gZhFYb8XCZwPyQ0sVlO6r2WOGvsGfkRSb5mLw+MzFr\nkGzIAkIZNZSCE5wbZg5520mkqLOJZ7q4tmhTjq36qv6ak6Ng74uh6kZlQJ+N/KRG\nT51/B4K0Pr1CHtzLdNlzkzGz\n-----END PRIVATE KEY-----\n",
+  "client_email": "gsheetsconfig@lively-math-180706.iam.gserviceaccount.com",
+  "client_id": "117588164898900017535",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://accounts.google.com/o/oauth2/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/gsheetsconfig%40lively-math-180706.iam.gserviceaccount.com"
+}
