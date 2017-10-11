@@ -9,7 +9,7 @@
 	        type: 'GET', 
 	        url: 'http://localhost:9999/com.jaxrs.api/webapi/hotels/id/73',
 	        success: function (data) { 
-	        	alert("Hi");
+	       
 	            dataSaved = JSON.parse(data);
 	            $('#divHotels').html(data);
 	        }

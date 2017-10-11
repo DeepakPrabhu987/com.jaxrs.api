@@ -1,20 +1,13 @@
 package Database;
 
 
-import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.time.temporal.ValueRange;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
-import java.util.regex.Pattern;
-
-import javax.ws.rs.core.Response;
-import javax.xml.ws.soap.AddressingFeature.Responses;
 
 import org.json.JSONObject;
 
@@ -33,16 +26,13 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
-import com.google.api.services.sheets.v4.model.CellData;
 import com.google.api.services.sheets.v4.model.DeleteDimensionRequest;
 import com.google.api.services.sheets.v4.model.DimensionRange;
-import com.google.api.services.sheets.v4.model.ExtendedValue;
-import com.google.api.services.sheets.v4.model.GridCoordinate;
 import com.google.api.services.sheets.v4.model.Request;
-import com.google.api.services.sheets.v4.model.RowData;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
-import com.google.api.services.sheets.v4.model.UpdateCellsRequest;
-import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
+import io.restassured.*;
+import io.restassured.http.ContentType;
+import io.restassured.response.Response;
 
 
 
@@ -79,11 +69,14 @@ public class gSheetService extends gSheetColumns{
 
 		//String API_KEY ="AIzaSyCHxuBS04U2fD1yBkc86IZAT2YHiaHrNAQ";
 
+	
+		
 		// Load client secrets.
 		InputStream in =
 				gSheetService.class.getResourceAsStream("/client_secret.json");
 		GoogleClientSecrets clientSecrets =
 				GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
+		
 
 		// Build flow and trigger user authorization request.
 		GoogleAuthorizationCodeFlow flow =
@@ -91,6 +84,13 @@ public class gSheetService extends gSheetColumns{
 						HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
 				.setDataStoreFactory(DATA_STORE_FACTORY)
 				.setAccessType("offline").setApprovalPrompt("force") .build(); 
+		
+		// Receive access token after refreshing it
+		
+		
+		
+		// Setting access token
+	//	Credential credential = new GoogleCredential().setAccessToken("AIzaSyCHxuBS04U2fD1yBkc86IZAT2YHiaHrNAQ");
 
 		Credential credential = new AuthorizationCodeInstalledApp(
 				flow, new LocalServerReceiver()).authorize("user");
@@ -113,7 +113,7 @@ public class gSheetService extends gSheetColumns{
 		return  myJsonContent.get(row);
 	}
 	
-	public void WriteIntoCell() throws IOException {
+/*	public void WriteIntoCell() throws IOException {
 		Sheets service = getSheetsService();
 		List<Request> requests = new ArrayList<>();
 
@@ -138,7 +138,7 @@ public class gSheetService extends gSheetColumns{
 		service.spreadsheets().batchUpdate(spreadsheetId, batchUpdateRequest)
 		.execute();
 	}
-
+*/
 
 
 public String getUniqueIDNumber() throws IOException
@@ -365,20 +365,30 @@ try{
 	public String retriveResponse() throws IOException
 	{
 
-		Sheets gservice = getSheetsService();
+	//	Sheets gservice = getSheetsService();
 
-
-
-
+		
+		//Hit service via URL
+		
+	   RestAssured.baseURI = "https://sheets.googleapis.com/v4/spreadsheets/15nHxfeM-6RzeBfbCbL2coDnQGgXShKOYo6N_OKJmA4M";
+		
 		//Takes data from the below defined range
-		String range =  "A1:Z100";
+				String range =  "A1:Z100";
+		
+	String ENDPOINT = "/values/"+range+"?key=AIzaSyCHxuBS04U2fD1yBkc86IZAT2YHiaHrNAQ";
+		
 
-		com.google.api.services.sheets.v4.model.ValueRange response = gservice.spreadsheets().values()
+	
+	Response restResponse = RestAssured.given().contentType(ContentType.JSON).get(ENDPOINT);
+   
+		
+		
+	/*	com.google.api.services.sheets.v4.model.ValueRange response = gservice.spreadsheets().values()
 				.get(spreadsheetId, range)
-				.execute();
+				.execute();*/
 
 		String [] rowValues = new String[100];
-		rowValues = response.toPrettyString().split("]");
+		rowValues = restResponse.toString().split("]");
 
 		int validRows = rowValues.length-3; // Have used 3 in order t neglect extra index values that were created while converting the response into pretty string
 		System.out.println("validRows: "+ validRows);
