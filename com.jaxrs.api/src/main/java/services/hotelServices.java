@@ -9,8 +9,9 @@ import java.util.Map;
 
 import com.google.gson.JsonElement;
 
-import Database.gSheetService;
+
 import Database.gSheetColumns;
+import Database.gSheetService;
 
 
 
@@ -44,13 +45,16 @@ public class hotelServices {
 		}
 		for(int currRow=1;currRow<=(utils.maxRow-1);currRow++)
 		{		
-			String ID =  (utils.getRowData(currRow))[0].replaceAll("\"", "");
-			String HoteName = (utils.getRowData(currRow))[1].replaceAll("\"", "");
-			String Location = (utils.getRowData(currRow))[2].replaceAll("\"", "");
-			String Ratings = (utils.getRowData(currRow))[3].replaceAll("\"", "");
-			String FamousDish = (utils.getRowData(currRow))[4].replaceAll("\"", "");
-			String StartedOn = (utils.getRowData(currRow))[5].replaceAll("\"", "");
-			String Landmark = (utils.getRowData(currRow))[6].replaceAll("\"", "");
+			String ID =  utils.removeWhiteSpaces((utils.getRowData(currRow))[0].replaceAll("\"", "").replace("[", ""));
+			String HoteName = utils.removeWhiteSpaces((utils.getRowData(currRow))[1].replaceAll("\"", ""));
+			String Location = utils.removeWhiteSpaces((utils.getRowData(currRow))[2].replaceAll("\"", ""));
+			String Ratings =utils.removeWhiteSpaces((utils.getRowData(currRow))[3].replaceAll("\"", ""));
+			String FamousDish =utils.removeWhiteSpaces((utils.getRowData(currRow))[4].replaceAll("\"", ""));
+			String StartedOn = utils.removeWhiteSpaces((utils.getRowData(currRow))[5].replaceAll("\"", ""));
+			String Landmark = utils.removeWhiteSpaces((utils.getRowData(currRow))[6].replaceAll("\"", ""));
+			
+		
+			
             hotels thisHotel = new hotels(ID,HoteName,Location,Ratings,FamousDish,StartedOn,Landmark);
 		    list.add(thisHotel);	
 		}

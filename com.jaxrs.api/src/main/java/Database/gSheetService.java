@@ -1,21 +1,32 @@
 package Database;
 
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.time.temporal.ValueRange;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
+import java.util.regex.Pattern;
+
+import javax.ws.rs.core.Response;
+import javax.xml.ws.soap.AddressingFeature.Responses;
 
 import org.json.JSONObject;
 
 import com.google.api.client.auth.oauth2.Credential;
 import com.google.api.client.extensions.java6.auth.oauth2.AuthorizationCodeInstalledApp;
+import com.google.api.client.extensions.java6.auth.oauth2.VerificationCodeReceiver;
 import com.google.api.client.extensions.jetty.auth.oauth2.LocalServerReceiver;
 import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeFlow;
+import com.google.api.client.googleapis.auth.oauth2.GoogleAuthorizationCodeRequestUrl;
 import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleTokenResponse;
 import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.json.JsonFactory;
@@ -26,86 +37,45 @@ import com.google.api.services.sheets.v4.SheetsScopes;
 import com.google.api.services.sheets.v4.model.BatchUpdateSpreadsheetRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesRequest;
 import com.google.api.services.sheets.v4.model.BatchUpdateValuesResponse;
+import com.google.api.services.sheets.v4.model.CellData;
 import com.google.api.services.sheets.v4.model.DeleteDimensionRequest;
 import com.google.api.services.sheets.v4.model.DimensionRange;
+import com.google.api.services.sheets.v4.model.ExtendedValue;
+import com.google.api.services.sheets.v4.model.GridCoordinate;
 import com.google.api.services.sheets.v4.model.Request;
+import com.google.api.services.sheets.v4.model.RowData;
 import com.google.api.services.sheets.v4.model.Spreadsheet;
-import io.restassured.*;
-import io.restassured.http.ContentType;
-import io.restassured.response.Response;
+import com.google.api.services.sheets.v4.model.UpdateCellsRequest;
+import com.google.api.services.sheets.v4.model.UpdateValuesResponse;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.security.GeneralSecurityException;
+import com.google.api.client.auth.oauth2.Credential;
+import com.google.api.client.googleapis.auth.oauth2.GoogleClientSecrets;
+import com.google.api.client.googleapis.auth.oauth2.GoogleCredential;
+import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.jackson2.JacksonFactory;
+import com.google.api.client.util.store.FileDataStoreFactory;
+import com.google.api.services.sheets.v4.Sheets;
 
 
 
 
-public class gSheetService extends gSheetColumns{
 
-
-	HashMap<Integer,String[]> myJsonContent = new HashMap<Integer, String[]>();
-	String spreadsheetId = "15nHxfeM-6RzeBfbCbL2coDnQGgXShKOYo6N_OKJmA4M";
-	public int  maxRow;
-	public int Range;
-	private static final String APPLICATION_NAME =
-			"Google Sheets API Java Quickstart";
-	private static final java.io.File DATA_STORE_DIR = new java.io.File(
-			System.getProperty("user.home"), ".credentials/sheets.googleapis.com-java-quickstart");
-	private static FileDataStoreFactory DATA_STORE_FACTORY;
-	private static final JsonFactory JSON_FACTORY =
-			JacksonFactory.getDefaultInstance();
-	private static HttpTransport HTTP_TRANSPORT;
-	private static final List<String> SCOPES =
-			Arrays.asList(SheetsScopes.SPREADSHEETS);
-
-	static {
-		try {
-			HTTP_TRANSPORT = GoogleNetHttpTransport.newTrustedTransport();
-			DATA_STORE_FACTORY = new FileDataStoreFactory(DATA_STORE_DIR);
-		} catch (Throwable t) {
-			t.printStackTrace();
-			System.exit(1);
-		}
-	}
-	public static Credential authorize() throws IOException {
-
-
-		//String API_KEY ="AIzaSyCHxuBS04U2fD1yBkc86IZAT2YHiaHrNAQ";
+public class gSheetService extends independentService{
 
 	
+	Sheets service;
+	
+	public gSheetService()
+	{
+		this.service = independentService.service;
 		
-		// Load client secrets.
-		InputStream in =
-				gSheetService.class.getResourceAsStream("/client_secret.json");
-		GoogleClientSecrets clientSecrets =
-				GoogleClientSecrets.load(JSON_FACTORY, new InputStreamReader(in));
-		
-
-		// Build flow and trigger user authorization request.
-		GoogleAuthorizationCodeFlow flow =
-				new GoogleAuthorizationCodeFlow.Builder(
-						HTTP_TRANSPORT, JSON_FACTORY, clientSecrets, SCOPES)
-				.setDataStoreFactory(DATA_STORE_FACTORY)
-				.setAccessType("offline").setApprovalPrompt("force") .build(); 
-		
-		// Receive access token after refreshing it
-		
-		
-		
-		// Setting access token
-	//	Credential credential = new GoogleCredential().setAccessToken("AIzaSyCHxuBS04U2fD1yBkc86IZAT2YHiaHrNAQ");
-
-		Credential credential = new AuthorizationCodeInstalledApp(
-				flow, new LocalServerReceiver()).authorize("user");
-		System.out.println(
-				"Credentials saved to " + DATA_STORE_DIR.getAbsolutePath());
-		return credential;
-	} 
-
-	public static Sheets getSheetsService() throws IOException {
-		Credential credential = authorize();
-		return new Sheets.Builder(HTTP_TRANSPORT, JSON_FACTORY, credential)
-				.setApplicationName(APPLICATION_NAME)
-				.build();
 	}
-
+	
 
 	public String[] getRowData(int row)
 	{
@@ -113,8 +83,8 @@ public class gSheetService extends gSheetColumns{
 		return  myJsonContent.get(row);
 	}
 	
-/*	public void WriteIntoCell() throws IOException {
-		Sheets service = getSheetsService();
+	public void WriteIntoCell() throws IOException {
+		
 		List<Request> requests = new ArrayList<>();
 
 		List<CellData> values = new ArrayList<>();
@@ -138,7 +108,7 @@ public class gSheetService extends gSheetColumns{
 		service.spreadsheets().batchUpdate(spreadsheetId, batchUpdateRequest)
 		.execute();
 	}
-*/
+
 
 
 public String getUniqueIDNumber() throws IOException
@@ -234,10 +204,10 @@ public String getUniqueIDNumber() throws IOException
 			//Deleting data
 
 			Spreadsheet spreadsheet = null;
-			Sheets gservice = getSheetsService();
+		
 
 			try {
-				spreadsheet = gservice.spreadsheets().get(spreadsheetId).execute();
+				spreadsheet = service.spreadsheets().get(spreadsheetId).execute();
 			} catch (IOException e1) {
 				dataDeleted= "false";
 				e1.printStackTrace();
@@ -263,7 +233,7 @@ public String getUniqueIDNumber() throws IOException
 			try {
 				dimensionRange.setSheetId(spreadsheet.getSheets().get(0).getProperties().getSheetId());
 
-				gservice.spreadsheets().batchUpdate(spreadsheetId, content).execute();
+				service.spreadsheets().batchUpdate(spreadsheetId, content).execute();
 				dataDeleted= "true";
 
 
@@ -316,7 +286,7 @@ try{
 
 		
 		
-		Sheets service = getSheetsService();
+		
 		
 		
 	
@@ -365,30 +335,19 @@ try{
 	public String retriveResponse() throws IOException
 	{
 
-	//	Sheets gservice = getSheetsService();
-
-		
-		//Hit service via URL
-		
-	   RestAssured.baseURI = "https://sheets.googleapis.com/v4/spreadsheets/15nHxfeM-6RzeBfbCbL2coDnQGgXShKOYo6N_OKJmA4M";
-		
-		//Takes data from the below defined range
-				String range =  "A1:Z100";
-		
-	String ENDPOINT = "/values/"+range+"?key=AIzaSyCHxuBS04U2fD1yBkc86IZAT2YHiaHrNAQ";
-		
-
 	
-	Response restResponse = RestAssured.given().contentType(ContentType.JSON).get(ENDPOINT);
-   
-		
-		
-	/*	com.google.api.services.sheets.v4.model.ValueRange response = gservice.spreadsheets().values()
+
+
+
+		//Takes data from the below defined range
+		String range =  "A1:Z100";
+
+		com.google.api.services.sheets.v4.model.ValueRange response = service.spreadsheets().values()
 				.get(spreadsheetId, range)
-				.execute();*/
+				.execute();
 
 		String [] rowValues = new String[100];
-		rowValues = restResponse.toString().split("]");
+		rowValues = response.toString().split("]");
 
 		int validRows = rowValues.length-3; // Have used 3 in order t neglect extra index values that were created while converting the response into pretty string
 		System.out.println("validRows: "+ validRows);
@@ -406,8 +365,62 @@ try{
 
 		return result;
 	}
+	public String removeWhiteSpaces(String result)
+	{
+		
+		
+	
 
+		boolean startIndexFound=false;
+		boolean reversedStartIndexFound = false;
+		int startIndex=0;
+		int reversedStartIndex=0;
+
+		while(startIndexFound==false)
+		{
+
+			if (!Character.isWhitespace(result.charAt(startIndex)))
+			{
+				startIndexFound=true;
+				break;
+			} else{
+
+				startIndex++;
+			}
+
+		}
+
+
+result = result.substring(startIndex);
+String reversedString = new StringBuffer(result).reverse().toString();
+
+		
+		while (reversedStartIndexFound==false)
+		{
+			if (!Character.isWhitespace(reversedString.charAt(reversedStartIndex)))
+			{
+				reversedStartIndexFound=true;
+				break;
+			} else{
+
+				reversedStartIndex++;
+			}
+		
+		}
+		
+		reversedString = reversedString.substring(reversedStartIndex);
+		
+		result = new StringBuffer(reversedString).reverse().toString();
+		
+		return result;
+		
+	}
+	
+	
+	
 
 }
-
+	
+	
+	
 

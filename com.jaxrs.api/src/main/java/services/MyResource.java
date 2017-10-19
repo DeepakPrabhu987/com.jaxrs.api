@@ -31,8 +31,8 @@ import com.google.gdata.util.parser.Parser;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 
-
 import Database.gSheetService;
+
 
 
 @Path("/hotels")
@@ -126,12 +126,11 @@ public class MyResource {
 	
 	
 	
-   
-	@DELETE
+   @DELETE
     @Path("/delete/{id}")
 
 	
-    public String deleteHotelsByID(@PathParam("id")String IDvalue) throws IOException {
+   public String deleteHotelsByID(@PathParam("id")String IDvalue) throws IOException {
 	
     	List<hotels> list = new ArrayList<hotels>();
     	gSheetService services = new gSheetService();
